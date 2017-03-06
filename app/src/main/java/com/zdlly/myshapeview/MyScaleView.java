@@ -30,7 +30,7 @@ public class MyScaleView extends android.support.v7.widget.AppCompatImageView {
     private float x_down = 0;
     private float y_down = 0;
 
-    private Bitmap touchImg = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+    private Bitmap touchImg;
 
     private PointF mid = new PointF();
 

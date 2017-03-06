@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         edit_sides = (EditText) findViewById(R.id.edit_sides);
         submit = (Button) findViewById(R.id.submit);
         my_view = (MyShapeView) findViewById(R.id.my_view);
-        my_view.setImageDrawable(getDrawable(R.mipmap.ic_launcher));
+        //my_view.setImageDrawable(getDrawable(R.mipmap.ic_launcher));
         submit.setOnClickListener(this);
     }
 
