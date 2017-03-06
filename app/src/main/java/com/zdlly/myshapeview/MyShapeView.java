@@ -23,6 +23,8 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
     private Xfermode mXfermode;
     private Bitmap mMask;
     private Path path;
+
+
     private Canvas canvas;
 
 
@@ -41,7 +43,7 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
     public MyShapeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(Color.WHITE);
+        mPaint.setColor(Color.GREEN);
         mXfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
         path = new Path();
     }
@@ -49,34 +51,30 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
     }
 
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         int id = canvas.saveLayer(0, 0, canvas.getWidth(), canvas.getHeight(), null, Canvas.ALL_SAVE_FLAG);
         createMask();
         super.onDraw(canvas);
         mPaint.setXfermode(mXfermode);
         canvas.drawBitmap(mMask, 0, 0, mPaint);
         mPaint.setXfermode(null);
+        path.reset();
         canvas.restoreToCount(id);
-
-
     }
 
-
     private void createMask() {
-
         int maskWidth = getMeasuredWidth();
         int maskHeight = getMeasuredHeight();
-        mMask = Bitmap.createBitmap(maskWidth, maskHeight, Bitmap.Config.ALPHA_8);
+        mMask = Bitmap.createBitmap(maskWidth, maskHeight, Bitmap.Config.ARGB_8888);
 
         canvas= new Canvas(mMask);
         int rectSize = maskWidth / 2;
         drawMultShape(canvas, mSides, rectSize);
-
     }
 
     public void drawMultShape(Canvas canvas, int count, float radius) {
@@ -84,7 +82,7 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
         canvas.translate(radius, radius);
         if (count < 3) {
             Toast.makeText(getContext(), "无法绘制边数少于3的图形", Toast.LENGTH_SHORT).show();
-        } else if (count < 20) {
+        } else if (count < 30) {
             for (int i = 0; i < count; i++) {
                 if (i == 0) {
                     path.moveTo(radius * cos(360 / count * i), radius * sin(360 / count * i));

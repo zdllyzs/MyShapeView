@@ -46,9 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         my_view.setmSides(Integer.parseInt(sides));
-        my_view.setImageDrawable(getDrawable(R.drawable.myjpg));
         my_view.invalidate();
-
-
     }
 }
