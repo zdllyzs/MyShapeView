@@ -35,10 +35,17 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
     private Path path;
 
 
+    private int color= Color.GREEN;
+
     final public static int DRAG = 1;
     final public static int ZOOM = 2;
+    final public static int COLOR = 1;
+    final public static int PICTURE = 2;
+
+
 
     public int mode = 0;
+    public int mode1=PICTURE;
 
     private Matrix matrix = new Matrix();
     private Matrix matrix1 = new Matrix();
@@ -55,6 +62,13 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
 
     private Canvas canvas;
 
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public void setMode1(int mode1) {
+        this.mode1 = mode1;
+    }
     public void setIsReload(int isReload) {
         this.isReload = isReload;
     }
@@ -73,8 +87,8 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
     public MyShapeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(Color.GREEN);
-        mXfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
+
+
         path = new Path();
         matrix = new Matrix();
     }
@@ -88,6 +102,12 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        mPaint.setColor(color);
+        if(mode1==COLOR){
+            mXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC);
+        }else {
+            mXfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
+        }
         int id = canvas.saveLayer(0, 0, canvas.getWidth(), canvas.getHeight(), null, Canvas.ALL_SAVE_FLAG);
         createMask();
         super.onDraw(canvas);

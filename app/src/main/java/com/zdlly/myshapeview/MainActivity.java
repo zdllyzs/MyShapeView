@@ -1,5 +1,6 @@
 package com.zdlly.myshapeview;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button color_choose;
     private Button picture_take;
     private Button picture_choose;
+    private ColorPickerDialog colorPickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         picture_take.setVisibility(View.GONE);
         picture_choose.setVisibility(View.GONE);
 
+        colorPickerDialog=ColorPickerDialog.createColorPickerDialog(this);
+        colorPickerDialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+            @Override
+            public void onColorPicked(int color, String hexVal) {
+                my_view.setColor(color);
+                my_view.invalidate();
+            }
+        });
+
         choose.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -71,28 +84,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        my_view.setIsReload(1);
         switch (v.getId()) {
             case R.id.submit:
                 submit();
                 break;
             case R.id.color_choose:
+                my_view.setMode1(MyShapeView.COLOR);
+                colorPickerDialog.setHexaDecimalTextColor(Color.parseColor("#ffffff"));
+                colorPickerDialog.show();
                 break;
             case R.id.picture_take:
+                my_view.setMode1(MyShapeView.PICTURE);
                 break;
             case R.id.picture_choose:
+                my_view.setMode1(MyShapeView.PICTURE);
                 break;
         }
     }
 
     private void submit() {
-        // validate
         String sides = edit_sides.getText().toString().trim();
         if (TextUtils.isEmpty(sides)) {
             Toast.makeText(this, "sides不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
         my_view.setmSides(Integer.parseInt(sides));
-        my_view.setIsReload(1);
+
         my_view.invalidate();
     }
 }
