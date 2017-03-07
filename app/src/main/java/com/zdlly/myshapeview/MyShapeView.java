@@ -24,12 +24,16 @@ import static com.zdlly.myshapeview.ToolScaleView.spacing;
 public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
 
 
+
+
+    private int isReload=0;
     private int mSides = 3;
     private Paint mPaint;
     private Xfermode mXfermode;
     private Bitmap mMask;
     private Bitmap currBitmap;
     private Path path;
+
 
     final public static int DRAG = 1;
     final public static int ZOOM = 2;
@@ -51,6 +55,9 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
 
     private Canvas canvas;
 
+    public void setIsReload(int isReload) {
+        this.isReload = isReload;
+    }
     public void setmSides(int mSides) {
         this.mSides = mSides;
     }
@@ -86,15 +93,25 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
         super.onDraw(canvas);
         mPaint.setXfermode(mXfermode);
         canvas.save();
+        if(isReload==1) {
+            currBitmap=null;
+            isReload=0;
+        }
         if (currBitmap == null) {
             canvas.drawBitmap(mMask, 0, 0, mPaint);
-        } else {
 
+        } else {
+            canvas.save();
+            Paint paint = new Paint();
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            canvas.drawPaint(paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+            canvas.restore();
             canvas.drawBitmap(currBitmap, matrix, null);
         }
         canvas.restore();
         mPaint.setXfermode(null);
-        path.reset();
+
         canvas.restoreToCount(id);
     }
 
@@ -177,6 +194,7 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
             }
             path.close();
             canvas.drawPath(path, mPaint);
+            path.reset();
         } else {
             canvas.drawCircle(0, 0, radius, mPaint);
         }
