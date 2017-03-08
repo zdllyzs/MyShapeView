@@ -1,8 +1,20 @@
 package com.zdlly.myshapeview;
 
+import android.Manifest;
+import android.content.ContentUris;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.text.TextUtils;
@@ -14,6 +26,9 @@ import android.widget.Toast;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 
+import java.io.File;
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText edit_sides;
@@ -22,10 +37,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppCompatRadioButton color;
     private AppCompatRadioButton photo;
     private RadioGroup choose;
+    private File outputImage;
+
+    private Uri imageuri;
     private Button color_choose;
     private Button picture_take;
     private Button picture_choose;
     private ColorPickerDialog colorPickerDialog;
+
+    public static final int TAKE_PHOTO = 1;
+    public static final int CHOOSE_PHOTO=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +117,96 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.picture_take:
                 my_view.setMode1(MyShapeView.PICTURE);
+                outputImage = new File(getExternalCacheDir(), "output_image.jpg");
+                try {
+                    if (outputImage.exists()) {
+                        outputImage.delete();
+                    }
+                    outputImage.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                imageuri = Uri.fromFile(outputImage);
+
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageuri);
+
+                startActivityForResult(intent, TAKE_PHOTO);
                 break;
             case R.id.picture_choose:
                 my_view.setMode1(MyShapeView.PICTURE);
+
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                }
+                Intent intent1=new Intent("android.intent.action.GET_CONTENT");
+                intent1.setType("image/*");
+                startActivityForResult(intent1,CHOOSE_PHOTO);
                 break;
         }
     }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case (TAKE_PHOTO):
+                if (resultCode == RESULT_OK) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(outputImage.getPath());
+                    my_view.setImageBitmap(bitmap);
+                }
+                break;
+            case(CHOOSE_PHOTO):{
+                String imagePath=null;
+                Uri uri=data.getData();
+                if(DocumentsContract.isDocumentUri(this,uri)){
+                    String docId=DocumentsContract.getDocumentId(uri);
+                    if("com.android.providers.media.documents".equals(uri.getAuthority())){
+                        String id =docId.split(":")[1];
+                        String selection=MediaStore.Images.Media._ID+"="+id;
+                        imagePath=getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
+                    }else if( "com.android.providers.downloads.documents".equals(uri.getAuthority())){
+                        Uri contentUri= ContentUris.withAppendedId(Uri.parse("content://downloads/public/public_downloads"),Long.valueOf(docId));
+                        imagePath=getImagePath(contentUri,null);
+                    }else if("content".equalsIgnoreCase(uri.getScheme())){
+                        imagePath=getImagePath(uri,null);
+
+                    }else if("file".equalsIgnoreCase(uri.getScheme())){
+                        imagePath=uri.getPath();
+                    }
+                    displayImage(imagePath);
+                }
+
+
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    private void displayImage(String imagePath) {
+        if (imagePath != null) {
+            Bitmap bitmap= BitmapFactory.decodeFile(imagePath);
+            my_view.setImageBitmap(bitmap);
+        }
+
+    }
+
+    private String getImagePath(Uri uri,String selection) {
+        String path=null;
+        Cursor cursor=getContentResolver().query(uri,null,selection,null,null);
+        if(cursor!=null){
+            if(cursor.moveToFirst()){
+                path=cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
 
     private void submit() {
         String sides = edit_sides.getText().toString().trim();
