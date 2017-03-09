@@ -1,4 +1,4 @@
-package com.zdlly.myshapeview;
+package com.zdlly.myshapeview.MyView;
 
 import android.graphics.PointF;
 import android.util.Log;

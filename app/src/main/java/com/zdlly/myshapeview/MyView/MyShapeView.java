@@ -1,4 +1,4 @@
-package com.zdlly.myshapeview;
+package com.zdlly.myshapeview.MyView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,9 +14,6 @@ import android.graphics.Xfermode;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Toast;
-
-import static com.zdlly.myshapeview.ToolScaleView.midPoint;
-import static com.zdlly.myshapeview.ToolScaleView.spacing;
 
 /**
  * Created by zdlly on 2017/3/5.
@@ -154,9 +151,9 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
 
             case MotionEvent.ACTION_POINTER_DOWN:
                 saveMatrix.set(matrix);
-                initDis = spacing(event);
+                initDis = ToolScaleView.spacing(event);
                 mode = ZOOM;
-                midPoint(mid, event);
+                ToolScaleView.midPoint(mid, event);
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -167,7 +164,7 @@ public class MyShapeView extends android.support.v7.widget.AppCompatImageView {
                     invalidate();
                 } else if (mode == ZOOM) {
                     matrix1.set(saveMatrix);
-                    float newDis = spacing(event);
+                    float newDis = ToolScaleView.spacing(event);
                     float scale = newDis / initDis;
                     matrix1.postScale(scale, scale, mid.x, mid.y);
                     matrix.set(matrix1);

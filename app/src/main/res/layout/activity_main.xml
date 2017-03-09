@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.zdlly.myshapeview.MainActivity">
+    tools:context="com.zdlly.myshapeview.MyView.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,9 +80,15 @@
             android:layout_height="wrap_content"
             android:text="相册"
             android:layout_weight="1"/>
+        <Button
+            android:id="@+id/my_picture_choose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自定义图片选择器"
+            android:layout_weight="1"/>
     </LinearLayout>
 
-    <com.zdlly.myshapeview.MyShapeView
+    <com.zdlly.myshapeview.MyView.MyShapeView
         android:id="@+id/my_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"

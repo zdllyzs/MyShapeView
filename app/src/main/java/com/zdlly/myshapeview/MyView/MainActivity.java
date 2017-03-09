@@ -1,4 +1,4 @@
-package com.zdlly.myshapeview;
+package com.zdlly.myshapeview.MyView;
 
 import android.Manifest;
 import android.content.ContentUris;
@@ -24,9 +24,12 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
+import com.zdlly.myshapeview.ImageSelector.ImageSelectorListActivity;
+import com.zdlly.myshapeview.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_PHOTO = 2;
+    private Button my_picture_choose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         picture_take.setOnClickListener(this);
         picture_choose = (Button) findViewById(R.id.picture_choose);
         picture_choose.setOnClickListener(this);
+        my_picture_choose = (Button) findViewById(R.id.my_picture_choose);
+        my_picture_choose.setOnClickListener(this);
         picture_take.setVisibility(View.GONE);
         picture_choose.setVisibility(View.GONE);
+        my_picture_choose.setVisibility(View.GONE);
 
         colorPickerDialog = ColorPickerDialog.createColorPickerDialog(this);
         colorPickerDialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
@@ -84,18 +91,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.color:
                         picture_take.setVisibility(View.GONE);
                         picture_choose.setVisibility(View.GONE);
+                        my_picture_choose.setVisibility(View.GONE);
                         color_choose.setVisibility(View.VISIBLE);
                         break;
                     case R.id.photo:
                         color_choose.setVisibility(View.GONE);
                         picture_take.setVisibility(View.VISIBLE);
                         picture_choose.setVisibility(View.VISIBLE);
+                        my_picture_choose.setVisibility(View.VISIBLE);
                         break;
                     default:
                         break;
                 }
             }
         });
+
     }
 
     @Override
@@ -139,6 +149,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent1.setType("image/*");
                 startActivityForResult(intent1, CHOOSE_PHOTO);
                 break;
+            case R.id.my_picture_choose:
+                my_view.setMode1(MyShapeView.PICTURE);
+                Intent intent2 = new Intent(MainActivity.this, ImageSelectorListActivity.class);
+                intent2.putExtra("type", 1);
+                startActivityForResult(intent2, ImageSelectorListActivity.RESULT_OK);
+                break;
         }
     }
 
@@ -177,6 +193,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             }
+            case (10001): {
+                if (data == null) return;
+                ArrayList<String> filepath = data.getStringArrayListExtra("filePath");
+                if (filepath != null) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(filepath.get(0));
+                    my_view.setImageBitmap(bitmap);
+                }
+
+
+            }
             default:
                 break;
         }
@@ -189,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
 
     private String getImagePath(Uri uri, String selection) {
         String path = null;
