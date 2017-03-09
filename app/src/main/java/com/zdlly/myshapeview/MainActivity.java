@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         my_view = (MyShapeView) findViewById(R.id.my_view);
         my_view.setImageDrawable(getDrawable(R.mipmap.ic_launcher));
         submit.setOnClickListener(this);
-//        AppCompatRadioButton color = (AppCompatRadioButton) findViewById(R.id.color);
-//        AppCompatRadioButton photo = (AppCompatRadioButton) findViewById(R.id.photo);
         choose = (RadioGroup) findViewById(R.id.choose);
         color_choose = (Button) findViewById(R.id.color_choose);
         color_choose.setOnClickListener(this);
@@ -211,8 +209,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "sides不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
+        my_view.setIsReload(1);
         my_view.setmSides(Integer.parseInt(sides));
-
         my_view.invalidate();
     }
 }
