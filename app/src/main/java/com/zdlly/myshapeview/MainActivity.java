@@ -16,7 +16,6 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatRadioButton;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -34,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText edit_sides;
     private Button submit;
     private MyShapeView my_view;
-    private AppCompatRadioButton color;
-    private AppCompatRadioButton photo;
     private RadioGroup choose;
     private File outputImage;
 
@@ -46,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ColorPickerDialog colorPickerDialog;
 
     public static final int TAKE_PHOTO = 1;
-    public static final int CHOOSE_PHOTO=2;
+    public static final int CHOOSE_PHOTO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         my_view = (MyShapeView) findViewById(R.id.my_view);
         my_view.setImageDrawable(getDrawable(R.mipmap.ic_launcher));
         submit.setOnClickListener(this);
-        color = (AppCompatRadioButton) findViewById(R.id.color);
-        photo = (AppCompatRadioButton) findViewById(R.id.photo);
+//        AppCompatRadioButton color = (AppCompatRadioButton) findViewById(R.id.color);
+//        AppCompatRadioButton photo = (AppCompatRadioButton) findViewById(R.id.photo);
         choose = (RadioGroup) findViewById(R.id.choose);
         color_choose = (Button) findViewById(R.id.color_choose);
         color_choose.setOnClickListener(this);
@@ -73,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         picture_take.setVisibility(View.GONE);
         picture_choose.setVisibility(View.GONE);
 
-        colorPickerDialog=ColorPickerDialog.createColorPickerDialog(this);
+        colorPickerDialog = ColorPickerDialog.createColorPickerDialog(this);
         colorPickerDialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
             @Override
             public void onColorPicked(int color, String hexVal) {
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         choose.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.color:
                         picture_take.setVisibility(View.GONE);
                         picture_choose.setVisibility(View.GONE);
@@ -140,13 +137,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                 }
-                Intent intent1=new Intent("android.intent.action.GET_CONTENT");
+                Intent intent1 = new Intent("android.intent.action.GET_CONTENT");
                 intent1.setType("image/*");
-                startActivityForResult(intent1,CHOOSE_PHOTO);
+                startActivityForResult(intent1, CHOOSE_PHOTO);
                 break;
         }
     }
-
 
 
     @Override
@@ -158,27 +154,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     my_view.setImageBitmap(bitmap);
                 }
                 break;
-            case(CHOOSE_PHOTO):{
-                String imagePath=null;
-                Uri uri=data.getData();
-                if(DocumentsContract.isDocumentUri(this,uri)){
-                    String docId=DocumentsContract.getDocumentId(uri);
-                    if("com.android.providers.media.documents".equals(uri.getAuthority())){
-                        String id =docId.split(":")[1];
-                        String selection=MediaStore.Images.Media._ID+"="+id;
-                        imagePath=getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
-                    }else if( "com.android.providers.downloads.documents".equals(uri.getAuthority())){
-                        Uri contentUri= ContentUris.withAppendedId(Uri.parse("content://downloads/public/public_downloads"),Long.valueOf(docId));
-                        imagePath=getImagePath(contentUri,null);
-                    }else if("content".equalsIgnoreCase(uri.getScheme())){
-                        imagePath=getImagePath(uri,null);
+            case (CHOOSE_PHOTO): {
+                String imagePath = null;
+                if (data != null) {
+                    Uri uri = data.getData();
+                    if (DocumentsContract.isDocumentUri(this, uri)) {
+                        String docId = DocumentsContract.getDocumentId(uri);
+                        if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                            String id = docId.split(":")[1];
+                            String selection = MediaStore.Images.Media._ID + "=" + id;
+                            imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+                        } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                            Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public/public_downloads"), Long.valueOf(docId));
+                            imagePath = getImagePath(contentUri, null);
+                        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+                            imagePath = getImagePath(uri, null);
 
-                    }else if("file".equalsIgnoreCase(uri.getScheme())){
-                        imagePath=uri.getPath();
+                        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+                            imagePath = uri.getPath();
+                        }
+                        displayImage(imagePath);
                     }
-                    displayImage(imagePath);
                 }
-
 
                 break;
             }
@@ -189,18 +186,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void displayImage(String imagePath) {
         if (imagePath != null) {
-            Bitmap bitmap= BitmapFactory.decodeFile(imagePath);
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             my_view.setImageBitmap(bitmap);
         }
 
     }
 
-    private String getImagePath(Uri uri,String selection) {
-        String path=null;
-        Cursor cursor=getContentResolver().query(uri,null,selection,null,null);
-        if(cursor!=null){
-            if(cursor.moveToFirst()){
-                path=cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
             }
             cursor.close();
         }

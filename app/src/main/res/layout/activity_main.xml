@@ -85,8 +85,10 @@
     <com.zdlly.myshapeview.MyShapeView
         android:id="@+id/my_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         android:src="@mipmap/ic_launcher" />
 
 
