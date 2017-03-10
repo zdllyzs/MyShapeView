@@ -34,12 +34,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText edit_sides;
-    private Button submit;
     private MyShapeView my_view;
-    private RadioGroup choose;
     private File outputImage;
 
-    private Uri imageuri;
     private Button color_choose;
     private Button picture_take;
     private Button picture_choose;
@@ -58,11 +55,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         edit_sides = (EditText) findViewById(R.id.edit_sides);
-        submit = (Button) findViewById(R.id.submit);
+        Button submit = (Button) findViewById(R.id.submit);
         my_view = (MyShapeView) findViewById(R.id.my_view);
         my_view.setImageDrawable(getDrawable(R.mipmap.ic_launcher));
         submit.setOnClickListener(this);
-        choose = (RadioGroup) findViewById(R.id.choose);
+        RadioGroup choose = (RadioGroup) findViewById(R.id.choose);
         color_choose = (Button) findViewById(R.id.color_choose);
         color_choose.setOnClickListener(this);
         picture_take = (Button) findViewById(R.id.picture_take);
@@ -132,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
 
-                imageuri = Uri.fromFile(outputImage);
+                Uri imageuri = Uri.fromFile(outputImage);
 
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageuri);

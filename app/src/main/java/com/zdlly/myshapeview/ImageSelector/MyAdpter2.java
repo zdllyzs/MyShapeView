@@ -4,8 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -55,19 +53,9 @@ class MyAdpter2 extends RecyclerView.Adapter<MyAdpter2.MyViewHolder> {
                     mOnItemClickListener.OnItemClick(v, pos);
             }
         });
-        if (detailsActivity.type == 1) {
-            holder.ck.setVisibility(View.INVISIBLE);
-        } else {
-            holder.ck.setVisibility(View.VISIBLE);
-            holder.ck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (mOnItemSelectkListener != null)
-                        mOnItemSelectkListener.OnItemSelect(buttonView, pos, isChecked);
-                }
-            });
+
+
         }
-    }
 
     @Override
     public int getItemCount() {
@@ -77,7 +65,6 @@ class MyAdpter2 extends RecyclerView.Adapter<MyAdpter2.MyViewHolder> {
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView iv;
-        CheckBox ck;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -89,7 +76,6 @@ class MyAdpter2 extends RecyclerView.Adapter<MyAdpter2.MyViewHolder> {
 
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
             iv.setLayoutParams(lp);
-            ck = (CheckBox) itemView.findViewById(R.id.ck_rec_item);
 
 
         }

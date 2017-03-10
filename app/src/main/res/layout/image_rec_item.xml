@@ -9,14 +9,4 @@
         android:layout_height="0dp"
         android:layout_centerInParent="true"
         />
-    <CheckBox
-        android:id="@+id/ck_rec_item"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/iv_rec_item"
-        android:layout_alignRight="@id/iv_rec_item"
-        android:button="@null"
-        android:background="@drawable/checkbox_selector"
-        />
 </RelativeLayout>
