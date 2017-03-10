@@ -3,7 +3,6 @@
     package="com.zdlly.myshapeview">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -20,10 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ImageSelector.ImageSelectorDetailsActivity"/>
-        <activity android:name=".ImageSelector.ImageSelectorListActivity"/>
+        <activity android:name=".ImageSelector.DetailsActivity"/>
+        <activity android:name=".ImageSelector.ListActivity"/>
         <activity android:name=".ImageSelector.PermissionActivity"/>
-        <activity android:name=".ImageSelector.PreviewImageActivity"/>
     </application>
 
 </manifest>

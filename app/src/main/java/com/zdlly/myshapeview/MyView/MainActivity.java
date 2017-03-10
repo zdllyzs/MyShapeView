@@ -24,7 +24,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
-import com.zdlly.myshapeview.ImageSelector.ImageSelectorListActivity;
+import com.zdlly.myshapeview.ImageSelector.ListActivity;
 import com.zdlly.myshapeview.R;
 
 import java.io.File;
@@ -151,9 +151,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.my_picture_choose:
                 my_view.setMode1(MyShapeView.PICTURE);
-                Intent intent2 = new Intent(MainActivity.this, ImageSelectorListActivity.class);
+                Intent intent2 = new Intent(MainActivity.this, ListActivity.class);
                 intent2.putExtra("type", 1);
-                startActivityForResult(intent2, ImageSelectorListActivity.RESULT_OK);
+                startActivityForResult(intent2, ListActivity.RESULT_OK);
                 break;
         }
     }
